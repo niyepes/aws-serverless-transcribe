@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Carga audios, consulta sus transcripciones y genera resúmenes consolidados con AWS.">
+  <title>Audio Intelligence · AWS</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/config.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Audio Intelligence, inicio">
+      <span class="brand-mark">AI</span>
+      <span><strong>Audio Intelligence</strong><small>Transcripción y síntesis</small></span>
+    </a>
+  </header>
+
+  <main class="page-wrap">
+    <section class="hero">
+      <div class="eyebrow"><span class="status-dot"></span> Procesamiento serverless</div>
+      <h1>De tus audios a las ideas que importan.</h1>
+      <p>Carga grabaciones, consulta sus transcripciones y genera bajo demanda un informe consolidado con decisiones, tareas y conclusiones.</p>
+      <div class="service-pills"><span>S3</span><span>Transcribe</span><span>Bedrock</span><span>Lambda</span></div>
+    </section>
+
+    <div id="app-content">
+      <section class="panel upload-panel">
+        <div class="panel-heading">
+          <div><span class="section-kicker">01 / CARGAR</span><h2>Subir archivos de audio</h2><p>Los audios se cargan directamente a un bucket privado de Amazon S3.</p></div>
+          <div class="icon-orb">↑</div>
+        </div>
+        <form id="upload-form">
+          <label class="dropzone" for="audio-files">
+            <span class="upload-symbol">⇧</span>
+            <strong>Selecciona uno o varios archivos</strong>
+            <span>MP3, WAV, FLAC, OGG, AMR, WEBM, M4A o MP4</span>
+            <input id="audio-files" type="file" multiple accept=".mp3,.mp4,.wav,.flac,.ogg,.amr,.webm,.m4a,audio/*" required>
+          </label>
+          <div class="upload-controls">
+            <label for="language-select">Idioma del audio
+              <select id="language-select">
+                <option value="es-US" selected>Español (es-US)</option>
+                <option value="es-ES">Español (es-ES)</option>
+                <option value="es-MX">Español (es-MX)</option>
+                <option value="en-US">Inglés (en-US)</option>
+              </select>
+            </label>
+            <button id="upload-button" class="button button-primary" type="submit">Subir y transcribir <span aria-hidden="true">→</span></button>
+          </div>
+          <p class="fine-print">Cada archivo se procesa de forma independiente. El idioma seleccionado debe ser compatible con Amazon Transcribe en la región desplegada.</p>
+        </form>
+        <div id="upload-progress" class="inline-message hidden" role="status"></div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading">
+          <div><span class="section-kicker">02 / TRANSCRIPCIONES</span><h2>Archivos cargados</h2><p id="files-subtitle">El estado se actualiza automáticamente.</p></div>
+          <button id="refresh-button" class="button button-light">Actualizar ↻</button>
+        </div>
+        <div id="files-list" class="file-list"><div class="empty-state">Todavía no has cargado archivos.</div></div>
+      </section>
+
+      <section class="summary-panel">
+        <div class="summary-illustration"><div class="doc-shape"><span></span><span></span><span></span><b>✦</b></div></div>
+        <div class="summary-copy">
+          <span class="section-kicker">03 / CONSOLIDAR</span>
+          <h2>Genera un resumen de todo lo completado</h2>
+          <p>Al presionar el botón, la aplicación toma una instantánea de las transcripciones que estén completadas en ese momento y solicita a Amazon Bedrock un informe en Markdown.</p>
+          <div class="report-points"><span>Resumen ejecutivo</span><span>Temas principales</span><span>Decisiones y tareas</span><span>Fuentes de origen</span></div>
+          <button id="summary-button" class="button button-primary" disabled>Generar resumen consolidado <span aria-hidden="true">→</span></button>
+          <p id="summary-hint" class="fine-print">Completa al menos una transcripción para habilitar el resumen.</p>
+          <div id="summary-progress" class="inline-message hidden" role="status"></div>
+        </div>
+      </section>
+
+      <section class="section-block summaries-section">
+        <div class="section-heading">
+          <div><span class="section-kicker">04 / INFORMES</span><h2>Resúmenes generados</h2><p>Los informes terminados están disponibles para descargar como Markdown.</p></div>
+        </div>
+        <div id="summaries-list" class="file-list"><div class="empty-state">Todavía no has generado resúmenes.</div></div>
+      </section>
+    </div>
+
+    <div id="global-message" class="global-message hidden" role="alert"></div>
+    <footer class="footer"><span>Demo educativa · AWS serverless</span><span>Los archivos quedan privados en Amazon S3.</span></footer>
+  </main>
+
+  <dialog id="transcript-dialog" class="transcript-dialog">
+    <div class="dialog-head"><div><span class="section-kicker">TRANSCRIPCIÓN</span><h2 id="dialog-title">Contenido</h2></div><button id="close-dialog" class="button button-quiet" type="button" aria-label="Cerrar">✕</button></div>
+    <pre id="dialog-content"></pre>
+  </dialog>
+</body>
+</html>

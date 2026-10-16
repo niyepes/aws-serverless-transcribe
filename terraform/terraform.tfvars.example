@@ -1,0 +1,6 @@
+aws_region               = "us-east-1"
+project_name             = "audio-intelligence"
+environment              = "demo"
+bedrock_model_id         = "anthropic.claude-haiku-4-5-20251001-v1:0"
+transcribe_language_code = "es-US"
+max_upload_mb            = 100

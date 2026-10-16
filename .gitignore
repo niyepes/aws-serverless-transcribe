@@ -1,0 +1,12 @@
+.terraform/
+terraform/.terraform/
+*.tfstate
+*.tfstate.*
+terraform/crash.log
+terraform/tfplan*
+terraform/build/*.zip
+__pycache__/
+*.pyc
+*.tfvars
+!*.tfvars.example
+Diagrama sin título.drawio.html
